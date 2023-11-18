@@ -138,6 +138,9 @@
   <ItemGroup>
     <Image Include="testimg.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="example.mp4" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -3,17 +3,31 @@
 #include <opencv2/core.hpp>
 #include <string>
 #include <cmath>
+#include <stdio.h>
+#include <opencv2/videoio.hpp>
 
 int main()
 {
     cv::Mat img;
+    cv::VideoCapture vid;
+    cv::Mat frame;
+
+    vid.open("example.mp4"); //opens the vid
+    if (!vid.isOpened())
+    {
+        printf("Error, unable to read the video file\n");
+        return -1;
+    }
+
+    vid.release(); // closes the vid
+
     img =  cv::imread("testimg.png");
     cv::Size s = img.size();
     
     cv::Vec3b bgrPixel;
     //Vec3b - vector with 3 byte entries 
     //which in this case are unsigned char values
-
+    
     std::string brightness_scale = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'.";
     unsigned int** arr = new unsigned int* [s.height];
     for (int i = 0; i < s.height; i++)
@@ -33,21 +47,15 @@ int main()
     {
         for (int j = 0; j < s.width; j++)
         {
-            std::cout << brightness_scale[arr[i][j]];
+            printf("%c",brightness_scale[arr[i][j]]);
         }
-        std::cout << std::endl;
+        printf("\n");
     }
     
     
     //std::cout << (int)bgrPixel[1] << std::endl; //show one BGR value (reversed RGB)
     //std::cout << bgrPixel << std::endl;
-    
 
-    //ADD CALCULATING PIXEL DISTANCE FROM BLACK
-    
-    
-    
-    
     //cv::imshow("Window", img);
 
     //cv::waitKey(3000);
