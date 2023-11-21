@@ -9,18 +9,32 @@
 #include <opencv2/core/utils/logger.hpp>
 #include <chrono>
 #include <thread>
+#include <windows.h>
+#include <mmsystem.h>
 
 #define VID_WIDTH 200
 #define VID_HEIGHT 50
 
+#pragma comment(lib, "Winmm.lib")
+
+void setCursorPosition(int x, int y)
+{
+    static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    //std::cout.flush();
+    COORD coord = { (SHORT)x, (SHORT)y };
+    SetConsoleCursorPosition(hOut, coord);
+}
 
 
 int main()
 {
     cv::utils::logging::setLogLevel(cv::utils::logging::LogLevel::LOG_LEVEL_SILENT); //get rid of the debug info output to console
 
+    mciSendString(TEXT("open \"badapple.mp3\" type mpegvideo alias mp3"), NULL, 0, NULL);   //opening sound file
+    mciSendString(TEXT("play mp3"), NULL, 0, NULL); //play sound file
+
     cv::Mat img;
-    cv::VideoCapture vid("example.mp4"); //opens the vid
+    cv::VideoCapture vid("badapple.mp4"); //opens the vid
     cv::Mat frame;
 
     if (!vid.isOpened())
@@ -43,8 +57,8 @@ int main()
     std::string brightness_scale = ".'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"; //white-black
     //std::string brightness_scale = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'."; //black-white
 
-    std::ios::sync_with_stdio(false);   //turns of synchronisation of streams 
-                                        //(can just increase perfomrance in certain scenarios)
+    std::ios::sync_with_stdio(false);   //turns off synchronisation of streams 
+                                        //(can just increase performance in certain scenarios)
    
     while (vid.read(frame))
     {
@@ -63,6 +77,7 @@ int main()
                 unsigned int z = (unsigned int)img.at<cv::Vec3b>(i, j)[2];
                 unsigned int vec_len = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
                 arr[i][j] = vec_len / 6.48;
+             
             }
         }
         
@@ -76,9 +91,11 @@ int main()
         }
         
         std::cout << bufor.str() << std::flush; //thanks to this, i have the instant output
-        std::chrono::milliseconds timespan(1);
+        std::chrono::milliseconds timespan(24);
         std::this_thread::sleep_for(timespan);
-        system("cls");
+        setCursorPosition(0, 0);    //using this instead of system("cls") turns out to be way faster if i just overwrite the characters
+         
+        
     }
     vid.release(); // closes the vid
 
@@ -96,4 +113,6 @@ int main()
 
     return 0;
 }
+
+
 
