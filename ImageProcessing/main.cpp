@@ -40,6 +40,7 @@ int main()
     if (!vid.isOpened())
     {
         printf("Error, unable to read the video file\n");
+        system("pause");
         return -1;
     }
 
@@ -110,9 +111,5 @@ int main()
     //std::cout << bgrPixel << std::endl;
 
     //cv::imshow("Window", img);
-
     return 0;
 }
-
-
-
